@@ -3,6 +3,8 @@ window.onload = () => {
   console.log("ready...");
 
   const radius = 100;
+  const minutesPerHour = 60;
+
   let prevAngle = -0.5 * Math.PI;
   let wasMovingClockwise = true;
   let checkpointTracker = 0;
@@ -17,6 +19,8 @@ window.onload = () => {
   const secondsDisplay = $("span.seconds");
   const startBtn = $("button.start-timer");
   const resetBtn = $("button.reset-timer");
+  const overlay = $(".overlay");
+  const dismissOverlayBtn = $(".overlay button.dismiss");
 
   startBtn.onclick = () => {
     if (minuteCount === 0) {
@@ -27,22 +31,24 @@ window.onload = () => {
 
     timerInterval = setInterval(() => {
       if (secondCount === 0 && minuteCount > 0) {
-        if (minuteCount % 60 === 0) {
+        if (minuteCount % minutesPerHour === 0) {
           hourCount--;
-          hoursDisplayDisplay.innerHTML = String(hourCount).padStart(2, "0");
+          hoursDisplay.innerHTML = String(hourCount).padStart(2, "0");
         }
         minuteCount--;
         secondCount = 59;
-        minutesDisplay.innerHTML = String(minuteCount % 60).padStart(2, "0");
+        minutesDisplay.innerHTML = String(minuteCount % minutesPerHour).padStart(2, "0");
       } else if (secondCount === 0 && minuteCount === 0) {
         secondsDisplay.innerHTML = String(secondCount).padStart(2, "0");
-        console.log("Ring the alarm");
         resetBtn.click();
-      }
-      secondsDisplay.innerHTML = String(secondCount).padStart(2, "0");
+        overlay.classList.remove("hidden");
 
+        return;
+      }
+      
+      secondsDisplay.innerHTML = String(secondCount).padStart(2, "0");
       secondCount--;
-    }, 1000);
+    }, 10);
   };
 
   resetBtn.onclick = () => {
@@ -56,6 +62,10 @@ window.onload = () => {
     minutesDisplay.innerHTML = String(minuteCount).padStart(2, "0");
     secondsDisplay.innerHTML = String(secondCount).padStart(2, "0");
   };
+
+  dismissOverlayBtn.onclick = () => {
+    overlay.classList.add("hidden");
+  }
 
   minuteHand.ondrag = (evt) => {
     if (evt.clientX === 0 && evt.clientY === 0) {
@@ -91,7 +101,7 @@ window.onload = () => {
         normalizeAngle(prevAngle) <= Math.PI / 2 &&
         normalizeAngle(angle) > Math.PI / 2
       ) {
-        if (minuteCount % 60 === 59) {
+        if (minuteCount % minutesPerHour === minutesPerHour - 1) {
           hourCount++;
         }
         minuteCount++;
@@ -103,7 +113,7 @@ window.onload = () => {
         normalizeAngle(prevAngle) >= Math.PI / 2 &&
         normalizeAngle(angle) < Math.PI / 2
       ) {
-        if (minuteCount % 60 === 0 && hourCount > 0) {
+        if (minuteCount % minutesPerHour === 0 && hourCount > 0) {
           hourCount--;
         }
         minuteCount = minuteCount > 0 ? minuteCount - 1 : 0;
@@ -112,7 +122,7 @@ window.onload = () => {
     }
 
     hoursDisplay.innerHTML = String(hourCount).padStart(2, "0");
-    minutesDisplay.innerHTML = String(minuteCount % 60).padStart(2, "0");
+    minutesDisplay.innerHTML = String(minuteCount % minutesPerHour).padStart(2, "0");
 
     prevAngle = angle;
     wasMovingClockwise = isMovingClockwise;
