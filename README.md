@@ -1,7 +1,7 @@
 # BadUI Battles Manually Winded Clock
 
 BadUI Battles inspired manually winded clock.\
-You can view and interact with the UI here: [Manually winded clock](https://lindo-mlambo.github.io/badui-battles-winding-clock/)
+You can view and interact with the UI here: [Manually winded clock](https://lamboughs.github.io/badui-battles-winding-clock/)
 
 ### Challenges:
 
