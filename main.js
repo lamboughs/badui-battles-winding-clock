@@ -48,7 +48,7 @@ window.onload = () => {
       
       secondsDisplay.innerHTML = String(secondCount).padStart(2, "0");
       secondCount--;
-    }, 10);
+    }, 1000);
   };
 
   resetBtn.onclick = () => {
